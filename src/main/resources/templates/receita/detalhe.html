@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div th:if="${receita != null}">
+		<div class="d-flex justify-content-between align-items-center">
+			<div th:if="${ #authorization.expression('hasAuthority(''ROLE_ADMINISTRADOR'')')
+							|| #authentication.name == receita.usuario.nomeUsuario}">
+				<a class="btn btn-primary me-3" th:href="@{/receita/cadastro(id=${receita.id})}">
+					<i class="fa-solid fa-pen-to-square"></i> Editar
+				</a>
+				<a
+					type="button"
+					class="btn btn-secondary"
+					title="Excluir"
+					data-bs-toggle="modal"
+					data-bs-target="#modalExcluir"
+					data-modal-object="Receita"
+					th:data-modal-name="${receita.nome}"
+					th:data-modal-link="@{/receita/excluir(id=${receita.id})}"
+				><i class="fa-solid fa-trash-can"></i> Excluir</a>
+			</div>
+			<div>
+				<a class="btn btn-primary me-3" th:href="@{/receita}">
+					<i class="fa-solid fa-list-ul"></i> Lista de Receitas
+				</a>
+				<a class="btn btn-primary me-3" href="javascript:history.back()">
+					<i class="fa-solid fa-arrow-left"></i> Voltar
+				</a>
+			</div>
+		</div>
+		<h1 class="mt-3">Detalhes de Receita </h1>
+		<div class="d-flex flex-wrap">
+			<div class="col-12 col-md-6">
+				<img th:if="${receita.imagem==null}" 
+					class="img-fluid w-100"
+					th:alt="'receita ' + ${receita.nome}"
+					th:src="@{/assets/images/no-image.png}" >
+				<div th:unless="${receita.imagem==null}">
+					<img th:if="${receita.imagem.startsWith('data:image/png;base64,') 
+											OR receita.imagem.startsWith('http')}" 
+						class="img-fluid w-100"
+						th:alt="'receita ' + ${receita.nome}"
+						th:src="${receita.imagem}" >
+					<img th:unless="${receita.imagem.startsWith('data:image/png;base64,') 
+										OR receita.imagem.startsWith('http')}" 
+						class="img-fluid w-100"
+						th:alt="'receita ' + ${receita.nome}"
+						th:src="@{/assets/images/no-image.png}" >
+				</div>
+			</div>
+			<div class="col-12 col-md-6 ps-3">		
+				<h3 class="mt-3" th:text="'#' + ${receita.id} + ' - ' + ${receita.nome}"></h3>
+				<form id="form-raty" method="post" th:action="@{/receita/avaliacao}">
+					<input type="hidden" name="receitaId" th:value="${receita.id}">
+					<input type="hidden" name="scoreRatyUser" id="scoreRatyUser" th:value="${#authentication.name}">
+					<input type="hidden" name="score" id="score-raty" value="0">
+					<div class="raty" 
+						th:data-score="${receitaMediaAvaliacao}"
+						th:data-read-only="${#authorization.expression('isAuthenticated()')
+												&& #authentication.name != receita.usuario.nomeUsuario 
+												? 'false' 
+												: 'true'}"
+						title="Avaliação"></div>
+				</form>
+				<div class="d-flex bd-highlight px-3">
+					<div class="border-0 p-2 bd-highlight m-0 fs-5 text text-center px-2" style="color: #4c482e;">
+						<i class="fa-solid fa-clock"></i>
+						<br>
+						<span th:text="${receita.tempoPreparo}"></span> MIN.
+					</div>
+					<div class="border-0 p-2 bd-highlight m-0 fs-5 text text-center px-2" style="color: #4c482e;">
+						<i class="fa-solid fa-bowl-food"></i>
+						<br>
+						<span th:text="${receita.rendimento}"></span>
+						<span th:text="${receita.rendimento == 1 ? 'PORÇÃO':'PORÇÕES'}"></span>
+					</div>
+				</div>
+				
+				<p class="mt-3">Descrição: <span th:text="${receita.descricao}"></span></p>
+
+				<p class="mt-3">Enviada por: <span th:text="${receita.usuario.nome}"></span></p>
+			</div>
+		</div>
+
+		<hr>
+		
+		<div class="d-flex flex-wrap">
+			<div class="col-12 col-md-6 ps-3">
+				<h3>Ingredientes: </h3>
+				<div class="mt-3 alert alert-info d-flex justify-content-between align-items-center" th:if="${#lists.isEmpty(receita.ingredientes)}">
+					<span>
+						<span th:text="${receita.nome}"></span> não possui ingredientes incluídos.
+					</span>
+				</div>
+				<div class="mt-3" th:unless="${#lists.isEmpty(receita.ingredientes)}">
+					<ul th:each="item : ${receita.ingredientes}">
+						<li class="py-1" th:if="${item.aGosto}">
+							<h5><span th:text="${item.receitaIngredientePK.ingrediente.nome}"></span> à gosto.</h5>
+						</li>
+						<li class="py-1" th:unless="${item.aGosto}">
+							<h5><span th:text="${item.quantidade}"></span>
+								<span th:text="${item.unidadeMedida.nome}"></span> de
+								<span th:text="${item.receitaIngredientePK.ingrediente.nome}"></span>
+							</h5>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-12 col-md-6 ps-3">
+			<h3>Passos para Modo de Preparo: </h3>
+				<div class="mt-3 alert alert-info d-flex justify-content-between align-items-center" th:if="${#lists.isEmpty(receita.modosPreparo)}">
+					<span>
+						<span th:text="${receita.nome}"></span> não possui passos para modo de preparo.
+					</span>
+				</div>
+				<div class="mt-3" th:unless="${#lists.isEmpty(receita.modosPreparo)}">
+					<ul th:each="modoPreparo : ${receita.modosPreparo}">
+						<li class="d-flex align-items-center" th:unless="item.receitaIngredientePK.ingrediente.aGosto == 1">
+							<h4 class="p-1 text-center"><span th:text="${modoPreparo.ordem}"></span>	</h4>
+							<h5 class="p-1 flex-fill"><span th:text="${modoPreparo.descricao}"></span></h5>	
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>
+ 
+<div layout:fragment="scripts">
+	<script>
+		$('.raty').raty({
+			path: '/assets/js/raty-3.1.0/lib/images'
+			, half:  true
+			, hints: ['muito peculiar', 'peculiar', 'gostoso', 'muito gostoso', 'uma delícia']
+			, click: function(score, evt) {
+				$('#score-raty').val(score);
+				$('#form-raty').submit();
+			}
+		})
+	</script>
+</div>
+		
+</html>

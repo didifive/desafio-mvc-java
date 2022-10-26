@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div class="card">
+		<div class="card-header">
+			<h4 class="card-title">
+				Conversor de Unidades de Medidas
+			</h4>
+		</div>
+		<div class="card-body">
+			<form method="post" th:action="@{/conversor}">
+				<div class="form-group mb-3">
+					<label for="ingrediente">Selecione o ingrediente:</label>
+					<div class="col-12 col-md-10 col-lg-8 col-xl-6">
+						<div class="input-group mb-3">
+							<select class="form-select" name="ingredienteId">
+								<option 
+									th:each="ingrediente: ${listaIngredientes}"
+									th:value="${ingrediente.id}"
+									th:text="${ingrediente.nome}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="unidadeMedida1">Converter:</label>
+					<div class="col-12 col-md-10 col-lg-8 col-xl-6">
+						<div class="input-group mb-3">
+							<input class="form-control" step="0.0001" min="0.0001" type="number" name="quantidadeUnidadeMedida1" required></input>
+							<select class="form-select" name="unidadeMedida1Id">
+								<option 
+									th:each="unidadeMedida: ${listaUnidadesMedida}"
+									th:value="${unidadeMedida.id}"
+									th:text="${unidadeMedida.nome} 
+										+ ' (' + ${unidadeMedida.quantidadeUnidadeReferencia} 
+										+ ${unidadeMedida.unidadeReferencia.abreviacao} + ')'"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="unidadeMedida2">Para:</label>
+					<div class="col-12 col-md-10 col-lg-8 col-xl-6">
+						<div class="input-group mb-3">
+							<select class="form-select" name="unidadeMedida2Id">
+								<option 
+									th:each="unidadeMedida: ${listaUnidadesMedida}"
+									th:value="${unidadeMedida.id}"
+									th:text="${unidadeMedida.nome} 
+										+ ' (' + ${unidadeMedida.quantidadeUnidadeReferencia} 
+										+ ${unidadeMedida.unidadeReferencia.abreviacao} + ')'"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="mb-2" th:if="${valorConvertido != null}">
+					<h5>
+						<span th:text="${unidadeMedidaReferenciaQuantidade}"></span>
+						<span th:text="${unidadeMedidaReferencia.nome}
+											+ ' (' + ${unidadeMedidaReferencia.quantidadeUnidadeReferencia} 
+											+ ${unidadeMedidaReferencia.unidadeReferencia.abreviacao} + ')'"></span>
+						de
+						<span th:text="${ingredienteReferencia.nome}"></span>
+						é equivalente à:
+						<strong>
+							<span th:text="${valorConvertido}"></span>
+							<span th:text="${unidadeMedidaConvertida.nome}
+												+ ' (' + ${unidadeMedidaConvertida.quantidadeUnidadeReferencia} 
+												+ ${unidadeMedidaConvertida.unidadeReferencia.abreviacao} + ')'"></span>
+						</strong>
+						<div class="mt-1"
+							th:if="${unidadeMedidaReferencia.unidadeReferencia.tipoReferencia
+									!= unidadeMedidaConvertida.unidadeReferencia.tipoReferencia}">
+							<i>
+								Observação: Para o cálculo foi considerado que ingrediente
+								<span th:text="${ingredienteReferencia.nome}"></span>
+								tem densidade de
+								<span th:text="${ingredienteReferencia.densidade}"></span>g/cm³ conforme cadastro.
+							</i>
+						</div>
+					</h5>
+				</div>
+				
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Calcular Conversão</button>
+					<spam>
+						<a class="btn btn-primary me-3" href="javascript:history.back()">
+							<i class="fa-solid fa-arrow-left"></i> Voltar
+						</a>
+					</spam>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+	 
+</html>

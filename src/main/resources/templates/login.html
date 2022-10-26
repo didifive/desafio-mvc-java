@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content" class="d-flex flex-wrap justify-content-center">
+	
+	<div class="alert alert-danger mb-3 d-flex align-content-center justify-content-between col-sm-10 col-lg-7" th:if="${param.error}">>
+        <span>Senha ou usuário inválido</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+	<div class="card col-sm-10 col-lg-7">
+		<div class="card-header">
+			<h4 class="card-title">
+				Login
+			</h4>
+		</div>
+		<div class="card-body">
+			<form th:action="@{/login}" method="post">
+				<div class="input-group mb-3">
+					<label class="col-2 me-1" for="username">Usuário:</label>
+					<div>
+						<input class="form-control col-sm-3" type="text" name="username">
+					</div>
+				</div>
+				<div class="input-group mb-3">
+					<label class="col-2 me-1" for="password">Senha:</label>
+					<div>
+						<input class="form-control col-sm-3" type="password" name="password">
+					</div>
+				</div>
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</button>
+					<a type="button" class="btn btn-primary" th:href="@{/cadastrar-usuario}"><i class="fa-solid fa-plus"></i> Novo Usuário</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+</html>

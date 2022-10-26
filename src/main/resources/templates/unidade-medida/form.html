@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div class="card">
+		<div class="card-header">
+			<h4 class="card-title">
+				<span th:text="${unidadeMedida.id == null ? 'Nova' : 'Editar'}"></span> 
+				Unidade Medida
+				<span th:if="${unidadeMedida.id != null}" th:text="'#'+${unidadeMedida.id}"></span>
+			</h4>
+		</div>
+		<div class="card-body">
+			<form method="post" th:object="${unidadeMedida}" th:action="@{/unidade-medida/cadastro}">
+				<input type="hidden" th:field="*{id}"></input>
+				<div class="form-group mb-3">
+					<label for="nome">Nome:</label>
+					<input class="form-control" type="text" th:field="*{nome}" required></input>
+					<div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="abreviacao">Abreviação:</label>
+					<input class="form-control" type="text" maxlength="8" th:field="*{abreviacao}" required></input>
+					<div class="text-danger" th:if="${#fields.hasErrors('abreviacao')}" th:errors="*{abreviacao}"></div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="quantidadeUnidadeReferencia">Unidade de Referência:</label>
+					<div class="col-12 col-md-10 col-lg-8 col-xl-6">
+						<div class="input-group mb-3">
+							<input class="form-control" step="0.0001" min="0.0001" type="number" th:field="*{quantidadeUnidadeReferencia}" required></input>
+							<select class="form-select" th:field="*{unidadeReferencia}">
+								<option 
+									th:each="unidadeReferencia: ${listaUnidadesReferencia}"
+									th:value="${unidadeReferencia}"
+									th:text="${unidadeReferencia.nome} + ' (' + ${unidadeReferencia.abreviacao} + ')'"></option>
+							</select>
+						</div>
+					</div>
+					<div class="text-danger" th:if="${#fields.hasErrors('quantidadeUnidadeReferencia')}" th:errors="*{quantidadeUnidadeReferencia}"></div>
+					<div class="text-danger" th:if="${#fields.hasErrors('unidadeReferencia')}" th:errors="*{unidadeReferencia}"></div>
+				</div>
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Salvar Unidade de Medida</button>
+					<spam>
+						<a th:if="${unidadeMedida.id != null}"
+						type="button"
+						class="btn btn-primary"
+						th:href="@{cadastro}"><i class="fa-solid fa-plus"></i> Nova Unidade de Medida</a>
+						<a class="btn btn-primary me-3" href="javascript:history.back()">
+							<i class="fa-solid fa-arrow-left"></i> Voltar
+						</a>
+					</spam>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+	 
+</html>

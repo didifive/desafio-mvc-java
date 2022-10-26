@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<h1>Projeto Palmirinha Onofre</h1>
+	<h5>Desafio MVC (semana 20/06 ~ 01/07/2022) - Programa GFT Start</h5>
+	<p>Objetivo: Aplicar os conceitos MVC aprendidos durante as semanas de estudo.</p>
+	<p>Escopo: Criar um sistema no qual simule um site de receitas.</p>
+
+	<hr>
+
+	<h3>Entrega Básica</h3>
+	<p>Popular o banco de dados: adicionar um botão para popular o banco ou criar um código para dar um insert das informações.</p>
+	<p>CRUD de receitas : Ex.: Bolo de cenoura (lista de ingredientes, tempo de preparo, modo de preparo e qualquer outro atributo que seja necessário)</p>
+	<p>CRUD de ingredientes : Ex.: Farinha de Trigo...</p>
+	<p>CRUD de unidades de medida: Ex.: Xicara...</p>
+	<p>Acessos de admin e usuário comum</p>
+
+	<hr>
+
+	<h3>Desafios bônus (Exceeds):</h3>
+	<p>Usar imagens nas receitas</p>
+	<p>Conversos de unidades</p>
+	<p>TDD/testes unitários</p>
+	<p>Histórico de receitas de usuários</p>
+	<p>Envio de email com confirmação de cadastro para o usuário</p>
+	<p>Funcionalidades extras com front-end</p>
+
+	<hr>
+	<h1>Awesome Tasty Recipes</h1>
+	<h3>O espetáculo do sabor</h3>
+	<p>Para o desafio foi criado o sistema <strong>Awesome Tasty Recipes - O espetáculo do sabor</strong> para procurar trazer o projeto o mais para a realidade possível.</p>
+	<p>Nele foi aplicado o solicitado da entrega básica e exceeds com detalhes abaixo relacionado:</p>
+		<ul>
+			<li>A página inicial do site contém a lista de receitas acessível por todos (não necessita autenticação);</li>
+			<li>A página de detalhes da receita também é acessível por todos (não necessita autenticação);</li>
+			<li>Para cadastrar ou editar receitas, deve possuir no mínimo a permissão de usuário comum, e com essa permissão é possível somente editar a(s) própria(s) receita(s);</li>
+			<li>Usuário com perfil administrador possui acesso total ao sistema e pode editar qualquer receita.</li>
+			<li>
+				Adição de avaliação para receita, mostrando a média de notas no index e nos detalhes de receitas. Para avaliar deve ser usuário cadastrado com no mínimo permissão de
+				usuário comum, não sendo permitido usuário avaliar a própria receita, se tentar avaliar novamente, irá substituir a nota anterior;
+			</li>
+			<li>
+				É possível enviar imagens para os cadastros de Ingredientes e Receitas, podendo ser por upload de imagens com até 512KB e extensões png, jpg e jpeg ou URL de imagem,
+				também com extensão png, jpg ou jpeg, já disponível online na nuvem;
+			</li>
+			<li>Página com Conversor de Unidades de Medidas (não necessita autenticação);</li>
+			<li>Página 'sobre' com resumo do site (esta);</li>
+			<li>
+				Em relação ao envio de email quando é cadastrada uma nova conta, o Google interrompeu a autenticação de contas somente por usuário e senha de vez a partir de 30/05/2022
+				(<a href="https://support.google.com/mail/?p=BadCredentials" target="_blank">https://support.google.com/mail/?p=BadCredentials</a>);
+			</li>
+			<li>
+				Para configurar conta de email, basta modificar as opções de `spring.mail` que estão no arquivo `application.properties`, e também alterar com email de remetente na
+				variável `from` que está no médoto `sendEmailConfirmacaoCadastroTo` da classe `com.gft.atr.services.EmailSenderService`;
+			</li>
+			<li>
+				Na segurança, a IDE avisou que `WebSecurityConfigurerAdapter` está depreciado, para sanar a situação, deve-se utilizar `org.springframework.security.web.SecurityFilterChain`,
+				será feito em próxima atualização;
+			</li>
+			<li>
+				Paginação para as listas de Unidades, Ingredientes e Receitas também poderão ser implementadas em próxima atualização.
+			</li>
+		</ul>
+	<p>Quantidade de Usuários cadastrados: <spam th:text="${quantidadeUsuarios}"></spam>.</p>
+	<p>Quantidade de Unidades de Medidas cadastradas: <spam th:text="${quantidadeUnidadesMedida}"></spam>.</p>
+	<p>Quantidade de Ingredientes cadastrados: <spam th:text="${quantidadeIngredientes}"></spam>.</p>
+	<p>Quantidade de Receitas cadastradas: <spam th:text="${quantidadeReceitas}"></spam>.</p>
+
+	<hr>
+	<p>Desafio proposto por Michel, Ubiratran, Clécio e equipe do Programa Start da GFT.</p>
+	<p>Feito por Luis Carlos Zancanela.</p>
+	<p>Repositório: <a href="https://git.gft.com/lsza/desafio-mvc" target="_blank">https://git.gft.com/lsza/desafio-mvc</a></p>
+
+	<figure>
+		<blockquote class="blockquote">
+			<p>Conhece o inimigo e conhece-te a ti mesmo. Assim, em uma centena de batalhas não estarás em perigo</p>
+		</blockquote>
+		<figcaption class="blockquote-footer">
+			Sun-Tzu, séc. 6 A.C. <cite title="Source Title">A arte da guerra</cite>.
+		</figcaption>
+	</figure>
+
+	<figure>
+		<blockquote class="blockquote">
+			<p>Se seu sistema precisa de FAQ, lhe falta intuitividade.</p>
+		</blockquote>
+		<figcaption class="blockquote-footer">
+			ZANCANELA L. C., 2022. <cite title="Source Title">Desafio MVC (semana 20/06 ~ 01/07/2022) - Programa GFT Start - Projeto Palmirinha Onofre</cite>.
+		</figcaption>
+	</figure>
+</div>
+	 
+</html>

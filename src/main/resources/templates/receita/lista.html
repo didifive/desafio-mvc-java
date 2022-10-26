@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div class="alert alert-info d-flex justify-content-between align-items-center mb-3" th:if="${#lists.isEmpty(listaReceitas)}">
+		<span>Nenhuma Receita encontrada!</span>
+		<span th:if="${(nome != null AND nome != '')
+						OR (nomeIngrediente != null AND nomeIngrediente != '')
+						OR (buscaUsuarioId != null AND buscaUsuarioId != '') }">
+			<i>
+				(Filtrado por 
+				<span th:if="${(nome != null AND nome != '')}" 
+					th:text="'- Receita: ' + ${nome} + ' -'"></span>
+				<span th:if="${(nomeIngrediente != null AND nomeIngrediente != '')}" 
+					th:text="'- Ingrediente: ' + ${nomeIngrediente} + ' -'"></span>
+				<span th:if="${(buscaUsuarioId != null AND buscaUsuarioId != '')}" 
+					th:text="'- Id de Usuário: ' + ${buscaUsuarioId} + ' -'"></span>
+				)</i></span>
+		<a class="btn btn-info" th:href="@{/receita/cadastro}">Cadastrar</a>
+	</div>
+	
+	<div class="card">
+		<div class="card-body">
+		  <h5 class="card-title">Filtro para Receita</h5>
+		  <form method="GET">
+			<div class="mb-2">
+				<div class="d-flex form-group justify-content-between mb-1">
+					<div class="form-group mb-1 me-3 flex-fill">
+						<label for="nome">Nome da Receita:</label>
+						<input 
+							class="form-control"
+							type="text"
+							name="nome"
+							th:value="${nome}"></input>
+					</div>
+					<div class="form-group mb-1 flex-fill">
+						<label for="nomeIngrediente">Nome do Ingrediente:</label>
+						<input 
+							class="form-control"
+							list="ingredientesLista"
+							name="nomeIngrediente"
+							id="nomeIngrediente"
+							th:value="${nomeIngrediente}">
+							<datalist id="ingredientesLista" name="ingredientesLista">
+								<option 
+									th:each="ingrediente: ${listaIngredientes}"
+									th:value="${ingrediente.nome}"
+									th:text="${ingrediente.nome}"></option>
+							</datalist>
+					</div>
+				</div>
+				<div class="form-group mb-2" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMINISTRADOR'')')}">
+					<label for="nome">Usuário:</label>
+					<select class="form-select" name="idUsuario" id="idUsuario">
+						<option value="">-- Escolha o usuário --</option>
+						<option 
+							th:each="usuario: ${listaUsuarios}"
+							th:value="${usuario.id}"
+							th:text="${usuario.nome}"
+							th:selected="${usuario.id == buscaUsuarioId}"></option>
+					</select>
+				</div>	
+				<button
+					type="submit"
+					class="btn btn-primary">
+					<i class="fa-solid fa-magnifying-glass"></i> Pesquisar</button>
+			</div>
+		</form>
+		</div>
+	  </div>
+	
+	<div th:if="${not #lists.isEmpty(listaReceitas)}">
+		<table class="table table-striped align-middle caption-top">
+			<caption>
+				Lista de Receitas
+				<span th:if="${(nome != null AND nome != '')
+								OR (nomeIngrediente != null AND nomeIngrediente != '')
+								OR (buscaUsuarioId != null AND buscaUsuarioId != '') }">
+					<i>
+						(Filtrado por 
+						<span th:if="${(nome != null AND nome != '')}" 
+							th:text="'- Receita: ' + ${nome} + ' -'"></span>
+						<span th:if="${(nomeIngrediente != null AND nomeIngrediente != '')}" 
+							th:text="'- Ingrediente: ' + ${nomeIngrediente} + ' -'"></span>
+						<span th:if="${(buscaUsuarioId != null AND buscaUsuarioId != '')}" 
+							th:text="'- Id de Usuário: ' + ${buscaUsuarioId} + ' -'"></span>
+						)</i></span>
+			</caption>
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Nome</th>
+					<th>Imagem</th>
+					<th>Descrição</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="receita : ${listaReceitas}">
+					<td th:text="${receita.id}"></td>
+					<td th:text="${receita.nome}"></td>
+					<td>
+						<div style="max-width: 100px; max-height: 100px;">
+							<div th:if="${receita.imagem==null}">
+								<img class="img-thumbnail"
+									th:alt="'receita ' + ${receita.nome}"
+									th:src="@{/assets/images/no-image.png}" >
+							</div>
+							<div th:unless="${receita.imagem==null}">
+								<div th:if="${receita.imagem.startsWith('data:image/png;base64,') 
+												OR receita.imagem.startsWith('http')}">
+									<img class="img-thumbnail"
+										th:alt="'receita ' + ${receita.nome}"
+										th:src="${receita.imagem}" >
+								</div>
+								<div th:unless="${receita.imagem.startsWith('data:image/png;base64,') 
+												OR receita.imagem.startsWith('http')}">
+									<img class="img-thumbnail"
+										th:alt="'receita ' + ${receita.nome}"
+										th:src="@{/assets/images/no-image.png}" >
+								</div>
+							</div>
+						</div>
+					</td>
+					<td th:text="${receita.descricao}"></td>
+					<td class="text-end">
+						<a class="btn btn-primary btn-sm" title="Detalhes" th:href="@{/receita/detalhe(id=${receita.id})}">
+							<i class="fa-solid fa-file-lines"></i> Detalhes
+						</a>
+						<span th:if="${ #authorization.expression('hasAuthority(''ROLE_ADMINISTRADOR'')')
+										|| #authentication.name == receita.usuario.nomeUsuario}">
+							<a class="btn btn-primary btn-sm ms-2" th:href="@{/receita/cadastro(id=${receita.id})}">
+								<i class="fa-solid fa-pen-to-square"></i> Editar
+							</a>
+							<a type="button"
+								class="btn btn-secondary btn-sm ms-2"
+								data-bs-toggle="modal"
+								data-bs-target="#modalExcluir"
+								data-modal-object="Receita"
+								th:data-modal-name="${receita.nome}"
+								th:data-modal-link="@{/receita/excluir(id=${receita.id})}"
+							><i class="fa-solid fa-trash-can"></i> Excluir</a>
+						</span>
+					</td>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="5" class="text-end">
+						Total de Receitas: <span th:text="${#lists.size(listaReceitas)}"></span>
+						<span th:if="${(nome != null AND nome != '')
+										OR (nomeIngrediente != null AND nomeIngrediente != '')
+										OR (buscaUsuarioId != null AND buscaUsuarioId != '') }">
+							<i>
+								(Filtrado por 
+								<span th:if="${(nome != null AND nome != '')}" 
+									th:text="'- Receita: ' + ${nome} + ' -'"></span>
+								<span th:if="${(nomeIngrediente != null AND nomeIngrediente != '')}" 
+									th:text="'- Ingrediente: ' + ${nomeIngrediente} + ' -'"></span>
+								<span th:if="${(buscaUsuarioId != null AND buscaUsuarioId != '')}" 
+									th:text="'- Id de Usuário: ' + ${buscaUsuarioId} + ' -'"></span>
+								)</i></span>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+</html>

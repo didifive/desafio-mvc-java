@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="mensagem">
+<div class="container">
+    <div class="alert alert-danger mb-3 d-flex align-content-center justify-content-between" th:if="${mensagemErro != null}">
+        <span th:text="${mensagemErro}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="alert alert-primary mb-3 d-flex align-items-center justify-content-between" th:if="${mensagem != null}">
+        <span th:text="${mensagem}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <img src="close.soon" style="display:none;" onerror="(function(el){ setTimeout(function(){ el.parentNode.parentNode.removeChild(el.parentNode); },10000 ); })(this);" />
+    </div>
+</div>
+</div>
+</body>
+</html>

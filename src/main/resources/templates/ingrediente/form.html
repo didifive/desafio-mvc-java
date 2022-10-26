@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div class="card">
+		<div class="card-header">
+			<h4 class="card-title">
+				<span th:text="${ingrediente.id == null ? 'Novo' : 'Editar'}"></span> 
+				Ingrediente
+				<span th:if="${ingrediente.id != null}" th:text="'#'+${ingrediente.id}"></span>
+			</h4>
+		</div>
+		<div class="card-body">
+			<form method="post" th:object="${ingrediente}" th:action="@{/ingrediente/cadastro}" enctype="multipart/form-data">
+				<input type="hidden" th:field="*{id}"></input>
+				<div class="form-group mb-3">
+					<label for="nome">Nome:</label>
+					<input class="form-control" type="text" th:field="*{nome}" required></input>
+					<div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="quantidadeUnidadeReferencia">Densidade:</label>
+					<div class="col-8 col-md-6 col-lg-4 col-xl-3">
+						<div class="input-group mb-3">
+							<input class="form-control" step="0.0001" min="0.0001" type="number" th:field="*{densidade}" required></input>
+							<span class="input-group-text" id="basic-addon2">g/cm³</span>
+						</div>
+					</div>
+					<div class="text-danger" th:if="${#fields.hasErrors('densidade')}" th:errors="*{densidade}"></div>
+				</div>
+				<input type="hidden" th:field="*{imagem}"></input>
+				<div class="form-group mb-3 d-flex">
+					<div class="col-12 col-md-3">
+						<div th:if="*{imagem==null}">
+							<img class="img-thumbnail"
+								th:alt="'Ingrediente ' + *{nome}"
+								th:src="@{/assets/images/no-image.png}" >
+						</div>
+						<div th:unless="*{imagem==null}">
+							<div th:if="*{imagem.startsWith('data:image/png;base64,') 
+											OR imagem.startsWith('http')}">
+								<img class="img-thumbnail"
+									th:alt="'Ingrediente ' + *{nome}"
+									th:src="*{imagem}" >
+							</div>
+							<div th:unless="*{imagem.startsWith('data:image/png;base64,') 
+											OR imagem.startsWith('http')}">
+								<img class="img-thumbnail"
+									th:alt="'Ingrediente ' + *{nome}"
+									th:src="@{/assets/images/no-image.png}" >
+							</div>
+						</div>
+					</div>
+					<div class="ms-1 col-12 col-md-9">
+
+						<div class="accordion accordion-flush" id="accordionFlushExample">
+							<div class="accordion-item">
+							  <h2 class="accordion-header" id="flush-headingOne">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+								  Enviar Imagem por URL
+								</button>
+							  </h2>
+							  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+								<div class="accordion-body">
+									<input th:if="*{imagem==null}"
+										class="form-control"
+										type="text"
+										th:name="ingredienteImagemUrl"
+										placeholder="http://www.site.com/imagem.png"></input>
+									<input th:unless="*{imagem==null}"
+										class="form-control"
+										type="text"
+										th:name="ingredienteImagemUrl"
+										th:placeholder="*{imagem.startsWith('http') ? imagem : 'http://www.site.com/imagem.png'}"></input>
+								</div>
+							  </div>
+							</div>
+							<div class="accordion-item">
+							  <h2 class="accordion-header" id="flush-headingTwo">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+									Enviar Imagem por Arquivo
+								</button>
+							  </h2>
+							  <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+								<div class="accordion-body">
+									<input type="file" class="form-control" th:name="ingredienteImagem">
+								</div>
+							  </div>
+							</div>
+						</div>
+						<caption>Observação: Enviar somente imagens com extensão '.png', '.jpg' ou '.jpeg' e tamanho até 512KB.
+							<br>Caso sejam preenchidos os dois campos (URL e Arquivo), irá prevalecer o a imagem enviada por arquivo.</caption>
+						<div class="text-danger" th:if="${erroUploadImagem != null}" th:text="${erroUploadImagem}"></div>
+					</div>
+				</div>
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Salvar Ingrediente</button>
+					<spam>
+						<a th:if="${ingrediente.id != null}"
+						type="button"
+						class="btn btn-primary"
+						th:href="@{cadastro}"><i class="fa-solid fa-plus"></i> Novo Ingrediente</a>
+						<a class="btn btn-primary me-3" href="javascript:history.back()">
+							<i class="fa-solid fa-arrow-left"></i> Voltar
+						</a>
+					</spam>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+	 
+</html>

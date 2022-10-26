@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div class="card">
+		<div class="card-header">
+			<h4 class="card-title">
+				Novo Usuário
+			</h4>
+		</div>
+		<div class="card-body">
+			<form method="post" th:object="${usuario}" th:action="@{/cadastrar-usuario}">
+				<input type="hidden" th:field="*{id}"></input>
+				<div class="form-group mb-3">
+					<label for="nome">Nome:</label>
+					<input class="form-control" type="text" th:field="*{nome}" required></input>
+					<div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="nome">Nome de Usuário:</label>
+					<input class="form-control" type="text" th:field="*{nomeUsuario}" required></input>
+					<div class="text-danger" th:if="${#fields.hasErrors('nomeUsuario')}" th:errors="*{nomeUsuario}"></div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="nome">E-mail:</label>
+					<input class="form-control" type="email" th:field="*{email}" required></input>
+					<div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="nome">Senha:</label>
+					<input class="form-control" type="password" th:field="*{senha}" required></input>
+					<div class="text-danger" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></div>
+				</div>				
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Cadastrar Usuário</button>
+					<a type="button" class="btn btn-primary" th:href="@{/login}"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+	 
+</html>

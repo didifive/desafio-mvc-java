@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div class="alert alert-info d-flex justify-content-between align-items-center mb-3" th:if="${#lists.isEmpty(listaUsuarios)}">
+		<span>Nenhum Usuário encontrado!</span>
+		<a class="btn btn-info" th:href="@{/usuario/cadastro}">Cadastrar</a>
+	</div>
+
+	<div th:if="${not #lists.isEmpty(listaUsuarios)}">
+		<table class="table table-striped align-middle caption-top">
+			<caption>
+				Lista de Usuarios 
+			</caption>
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Nome</th>
+					<th>Nome de Usuário (Login)</th>
+					<th>Email</th>
+					<th>Status</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="usuario : ${listaUsuarios}">
+					<td th:text="${usuario.id}"></td>
+					<td th:text="${usuario.nome}"></td>
+					<td th:text="${usuario.nomeUsuario}"></td>
+					<td th:text="${usuario.email}"></td>
+					<td th:text="${usuario.ativo ? 'ATIVO' : 'DESATIVADO'}"></td>
+					<td class="text-end">
+						<a class="btn btn-primary btn-sm" title="Detalhes" th:href="@{/usuario/detalhe(id=${usuario.id})}">
+							<i class="fa-solid fa-file-lines"></i> Detalhes
+						</a>
+						<a class="btn btn-primary btn-sm ms-2" th:href="@{/usuario/cadastro(id=${usuario.id})}">
+							<i class="fa-solid fa-pen-to-square"></i> Editar
+						</a>
+					</td>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="6" class="text-end">
+						Total de Usuarios: <span th:text="${#lists.size(listaUsuarios)}"></span>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+	 
+</html>

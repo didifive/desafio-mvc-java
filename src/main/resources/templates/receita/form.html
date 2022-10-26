@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div
+		class="card"
+		th:unless="${ (#authorization.expression('isAuthenticated') AND receita.id == null)
+					OR receita.usuario.nomeUsuario == #authentication.name
+					OR #authorization.expression('hasAuthority(''ROLE_ADMINISTRADOR'')')}">
+		<a class="btn btn-primary me-3" href="javascript:history.back()">
+			<i class="fa-solid fa-arrow-left"></i> Voltar
+		</a>
+	</div>
+	<div
+		class="card"
+		th:if="${ (#authorization.expression('isAuthenticated') AND receita.id == null)
+					OR receita.usuario.nomeUsuario == #authentication.name
+					OR #authorization.expression('hasAuthority(''ROLE_ADMINISTRADOR'')')}">
+		<div class="card-header d-flex justify-content-between">
+			<h4 class="card-title">
+				<span th:text="${receita.id == null ? 'Nova' : 'Editar'}"></span> 
+				Receita
+				<span th:if="${receita.id != null}" th:text="'#'+${receita.id}"></span>
+			</h4>
+			<a class="btn btn-primary" title="Detalhes" th:href="@{/receita/detalhe(id=${receita.id})}">
+				<i class="fa-solid fa-file-lines"></i> Detalhes
+			</a>
+		</div>
+		<div class="card-body">
+			<form method="post" th:object="${receita}" th:action="@{/receita/cadastro}" enctype="multipart/form-data">
+				<input type="hidden" th:field="*{id}"></input>
+				<input type="hidden" th:field="*{usuario}"></input>
+				<input 
+					type="hidden"
+					name="nomeUsuario"
+					th:value="${receita.id != null ? receita.usuario.nomeUsuario : #authentication.name}"></input>
+				<div class="form-group mb-3">
+					<label for="nome">Nome:</label>
+					<input class="form-control" type="text" th:field="*{nome}" required></input>
+					<div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="descricao">Descrição:</label>
+					<input class="form-control" type="text" maxlength="255" th:field="*{descricao}" required></input>
+					<div class="text-danger" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="tempoPreparo">Tempo de Preparo:</label>
+					<div class="col-8 col-md-6 col-lg-4 col-xl-3">
+						<div class="input-group mb-3">
+							<input class="form-control" step="1" min="1" type="number" th:field="*{tempoPreparo}" required></input>
+							<span class="input-group-text" id="basic-addon2">minuto(s)</span>
+						</div>
+					</div>
+					<div class="text-danger" th:if="${#fields.hasErrors('tempoPreparo')}" th:errors="*{tempoPreparo}"></div>
+				</div>
+				<div class="form-group mb-3">
+					<label for="rendimento">Rendimento:</label>
+					<div class="col-8 col-md-6 col-lg-4 col-xl-3">
+						<div class="input-group mb-3">
+							<input class="form-control" step="1" min="1" type="number" th:field="*{rendimento}" required></input>
+							<span class="input-group-text" id="basic-addon2">porção(ões)</span>
+						</div>
+					</div>
+					<div class="text-danger" th:if="${#fields.hasErrors('rendimento')}" th:errors="*{rendimento}"></div>
+				</div>
+
+				<table class="table table-striped align-middle caption-top">
+					<thead>
+						<tr>
+							<th colspan="6"><h3>Ingredientes</h3></th>
+						</tr>
+						<tr>
+							<th>N.</th>
+							<th>À Gosto</th>
+							<th>Quantidade</th>
+							<th>Unidade de Medida</th>
+							<th>Ingrediente</th>
+							<th>
+								<button class="btn btn-success btn-sm"
+									type="submit"
+									name="addRowIngrediente"
+								>+ Adicionar</button>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="ingrediente,rowStat : *{ingredientes}">
+							<input type="hidden" th:field="*{ingredientes[__${rowStat.index}__].receitaIngredientePK.receita}"></input>
+							<td th:text="${rowStat.count}"></td>
+							<td>
+								<input class="form-check-input" type="checkbox" th:field="*{ingredientes[__${rowStat.index}__].aGosto}"></input>
+								<label class="form-check-label">À Gosto</label>
+							</td>
+							<td>
+								<input class="form-control"
+									step="0.1"
+									min="0.1"
+									type="number"
+									th:field="*{ingredientes[__${rowStat.index}__].quantidade}" required></input>
+							</td>
+							<td>
+								<select class="form-select" th:field="*{ingredientes[__${rowStat.index}__].unidadeMedida}">
+								<option th:each="unidadeMedida: ${listaUnidadesMedida}" 
+											th:value="${unidadeMedida.id}" 
+											th:text="${unidadeMedida.nome}"></option>
+						  		</select>
+							</td>
+							<td>
+								<select class="form-select" th:field="*{ingredientes[__${rowStat.index}__].receitaIngredientePK.ingrediente}">
+								<option th:each="ingrediente : ${listaIngredientes}" 
+											th:value="${ingrediente.id}" 
+											th:text="${ingrediente.nome}"></option>
+						  		</select>
+							</td>
+							<td>
+								<button class="btn btn-danger btn-sm"
+									type="submit"
+									name="removeRowIngrediente" 
+									th:value="${rowStat.index}"
+					  				>- Remover</button>
+							</td>
+					  	</tr>
+					</tbody>
+				</table>
+
+				<table class="table table-striped align-middle caption-top">
+					<thead>
+						<tr>
+							<th colspan="3"><h3>Modo de Preparo - Etapas</h3></th>
+						</tr>
+						<tr>
+							<th>N.</th>
+							<th>Ordem</th>
+							<th>Descrição</th>
+							<th>
+								<button class="btn btn-success btn-sm"
+									type="submit"
+									name="addRowModoPreparo"
+								>+ Adicionar</button>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="modoPreparo,rowStat : *{modosPreparo}">
+							<input type="hidden" th:field="*{modosPreparo[__${rowStat.index}__].id}"></input>
+							<input type="hidden" th:field="*{modosPreparo[__${rowStat.index}__].receita}"></input>
+							<td th:text="${rowStat.count}"></td>
+							<td class="col-1">
+								<input 
+									class="form-control"
+									type="number"
+									min="1"
+									step="1"
+									th:value="${rowStat.count}"
+									th:field="*{modosPreparo[__${rowStat.index}__].ordem}"></input>
+							</td>
+							<td>
+								<input 
+									class="form-control"
+									type="text"
+									maxlength="255"
+									th:field="*{modosPreparo[__${rowStat.index}__].descricao}"></input>
+							</td>
+							<td>
+								<button class="btn btn-danger btn-sm"
+									type="submit"
+									name="removeRowModoPreparo" 
+									th:value="${rowStat.index}"
+					  				>- Remover</button>
+							</td>
+					  	</tr>
+					</tbody>
+				</table>
+
+				<input type="hidden" th:field="*{imagem}"></input>
+				<div class="form-group mb-3 d-flex">
+					<div class="col-12 col-md-3">
+						<div th:if="*{imagem==null}">
+							<img class="img-thumbnail"
+								th:alt="'Receita ' + *{nome}"
+								th:src="@{/assets/images/no-image.png}" >
+						</div>
+						<div th:unless="*{imagem==null}">
+							<div th:if="*{imagem.startsWith('data:image/png;base64,') 
+											OR imagem.startsWith('http')}">
+								<img class="img-thumbnail"
+									th:alt="'Receita ' + *{nome}"
+									th:src="*{imagem}" >
+							</div>
+							<div th:unless="*{imagem.startsWith('data:image/png;base64,') 
+											OR imagem.startsWith('http')}">
+								<img class="img-thumbnail"
+									th:alt="'Receita ' + *{nome}"
+									th:src="@{/assets/images/no-image.png}" >
+							</div>
+						</div>
+					</div>
+					<div class="ms-1 col-12 col-md-9">
+
+						<div class="accordion accordion-flush" id="accordionFlushExample">
+							<div class="accordion-item">
+							  <h2 class="accordion-header" id="flush-headingOne">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+								  Enviar Imagem por URL
+								</button>
+							  </h2>
+							  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+								<div class="accordion-body">
+									<input th:if="*{imagem==null}"
+										class="form-control"
+										type="text"
+										th:name="receitaImagemUrl"
+										placeholder="http://www.site.com/imagem.png"></input>
+									<input th:unless="*{imagem==null}"
+										class="form-control"
+										type="text"
+										th:name="receitaImagemUrl"
+										th:placeholder="*{imagem.startsWith('http') ? imagem : 'http://www.site.com/imagem.png'}"></input>
+								</div>
+							  </div>
+							</div>
+							<div class="accordion-item">
+							  <h2 class="accordion-header" id="flush-headingTwo">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+									Enviar Imagem por Arquivo
+								</button>
+							  </h2>
+							  <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+								<div class="accordion-body">
+									<input type="file" class="form-control" th:name="receitaImagem">
+								</div>
+							  </div>
+							</div>
+						</div>
+						<caption>Observação: Enviar somente imagens com extensão '.png', '.jpg' ou '.jpeg' e tamanho até 512KB.
+							<br>Caso sejam preenchidos os dois campos (URL e Arquivo), irá prevalecer o a imagem enviada por arquivo.</caption>
+						<div class="text-danger" th:if="${erroUploadImagem != null}" th:text="${erroUploadImagem}"></div>
+					</div>
+				</div>
+
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Salvar Receita</button>
+					<span>
+						<a th:if="${receita.id != null}"
+						type="button"
+						class="btn btn-primary"
+						th:href="@{cadastro}"><i class="fa-solid fa-plus"></i> Nova Receita</a>
+					</span>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+	 
+</html>

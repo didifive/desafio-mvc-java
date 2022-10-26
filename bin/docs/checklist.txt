@@ -1,0 +1,47 @@
+Projeto Palmirinha Onofre
+• Objetivo: Aplicar os conceitos MVC aprendidos durante as semanas de estudo.
+• Escopo: Criar um sistema no qual simule um site de receitas.
+
+Entrega básica de MVC
+
+[X] Popular o banco de dados: adicionar um botão para popular o banco ou criar um código para dar um insert das informações.
+
+[X] CRUD de receitas : Ex.: Bolo de cenoura
+(lista de ingredientes, tempo de preparo, modo de preparo e
+qualquer outro atributo que seja necessário)
+
+[X] CRUD de ingredientes : Ex.: Farinha de Trigo...
+
+[X] CRUD de unidades de medida: Ex.: Xicara...
+
+Aplicação terá que ter dois modos de acesso:
+[X] Admin
+[X] Usuário (cadastro feito no primeiro acesso)
+[X] Admin: tem total acesso a aplicação e ao crud
+[X] Usuário: tem acesso apenas as Views de lista de receitas cadastradas e a visualização da receita escolhida.
+
+[X] Acesso Admin será obrigatório ser : admin@gft.com
+senha: Gft@1234
+[X] Acesso Usuário será obrigatório ser : usuario@gft.com
+senha: Gft@1234
+
+PARA CRUD DE RECEITAS:
+[X] 1. Listagem com pesquisa por nome;
+[X] 2. Pagina de cadastro e atualização;
+[X] 3. Busca de receita por ingredientes;
+
+PARA CRUD DE INGREDIENTES:
+[X] 1. Listagem com pesquisa por nome;
+[X] 2. Pagina de cadastro e atualização;
+
+PARA CRUD DE UNIDADE DE MEDIDA:
+[X] 1. Listagem com pesquisa por nome;
+[X] 2. Pagina de cadastro e atualização;
+
+Desafio bônus:
+[X] 1. Utilização de imagens nas receitas
+[ ] 2. Conversor de Unidades: Ex.: Colher de sopa X xicara
+[X] 3. TDD / TESTES UNITÁRIOS
+[X] 4. No acesso Admin, Histórico de receitas preparadas por usuário
+[X] 5. Envio de email para confirmar acesso na aplicação (email enviado para Usuário )
+[X] 6. Qualquer funcionalidade extra com front é bem vindo

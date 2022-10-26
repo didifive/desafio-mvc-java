@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div class="row justify-content-evenly align-content-start">
+		<div th:each="receita : ${listaReceitas}" class="card col-12 col-sm-5 mb-5 p-0 h-25">
+			<div th:if="${receita.imagem==null}">
+				<img class="img-fluid"
+					th:alt="'receita ' + ${receita.nome}"
+					th:src="@{/assets/images/no-image.png}" >
+			</div>
+			<div th:unless="${receita.imagem==null}">
+				<div th:if="${receita.imagem.startsWith('data:image/png;base64,') 
+								OR receita.imagem.startsWith('http')}">
+					<img class="img-fluid"
+						th:alt="'receita ' + ${receita.nome}"
+						th:src="${receita.imagem}" >
+				</div>
+				<div th:unless="${receita.imagem.startsWith('data:image/png;base64,') 
+								OR receita.imagem.startsWith('http')}">
+					<img class="img-fluid"
+						th:alt="'receita ' + ${receita.nome}"
+						th:src="@{/assets/images/no-image.png}" >
+				</div>
+			</div>
+			<div class="d-flex bd-highlight w-100 px-3">
+				<div class="border-0 p-2 flex-grow-1 bd-highlight m-0 fs-5 text text-center" style="color: #4c482e;">
+					<i class="fa-solid fa-clock"></i>
+					<br>
+					<span th:text="${receita.tempoPreparo}"></span> MIN.
+				</div>
+				<div class="border-0 p-2 flex-grow-1 bd-highlight m-0 fs-5 text text-center" style="color: #4c482e;">
+					<i class="fa-solid fa-bowl-food"></i>
+					<br>
+					<span th:text="${receita.rendimento}"></span>
+					<span th:text="${receita.rendimento == 1 ? 'PORÇÃO':'PORÇÕES'}"></span>
+				</div>
+			</div>
+			<div class="px-3">
+				<div class="raty" 
+					th:if="${#maps.containsKey(receitaMediaAvaliacao, receita.id)}"
+					th:data-score="${receitaMediaAvaliacao.get(receita.id)}"
+					data-read-only="true"
+					title="Avaliação">
+				</div>
+			  	<h5 class="fs-5 text text-uppercase fw-bold"  th:text="${receita.nome}"></h5>
+				<h6 class="mb-2 text-muted" th:text="${receita.descricao}"></h6>
+				<p> <i>Por: <span th:text="${receita.usuario.nome}"></span></i></p>
+			</div>
+			<div class="d-flex bd-highlight w-100">
+				<a
+					class="btn btn-dark border-0 p-2 flex-grow-1 bd-highlight m-0"
+					title="Detalhes"
+					th:href="@{/receita/detalhe(id=${receita.id})}"
+					style="background-color: #4c482e; border-radius: 0%;">
+					<i class="fa-solid fa-file-lines"></i> Detalhes
+				</a>
+				<a th:if="${ #authorization.expression('hasAuthority(''ROLE_ADMINISTRADOR'')')
+								|| #authentication.name == receita.usuario.nomeUsuario}"
+					class="btn btn-dark border-0 p-2 flex-grow-1 bd-highlight m-0"
+					title="Editar"
+					th:href="@{/receita/cadastro(id=${receita.id})}"
+					style="background-color: #a7763b; border-radius: 0%;">
+					<i class="fa-solid fa-pen-to-square"></i> Editar
+				</a>				
+			</div>
+		  </div>
+	</div>
+</div>
+	 
+<div layout:fragment="scripts">
+	<script>
+		$('.raty').raty({
+			path: '/assets/js/raty-3.1.0/lib/images'
+			, half:  true
+			, hints: ['muito peculiar', 'peculiar', 'gostoso', 'muito gostoso', 'uma delícia']
+		})
+	</script>
+</div>
+
+</html>

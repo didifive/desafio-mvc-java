@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+<body>
+<div th:fragment="modal">
+  <div class="modal fade" id="modalExcluir" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">Titulo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Conteúdo Dinâmico
+        </div>
+        <div class="modal-footer">
+          <a type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Fechar</a>
+          <a type="button" class="btn btn-secondary" href="#"><i class="fa-solid fa-trash-can"></i> Confirmar Exclusão</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

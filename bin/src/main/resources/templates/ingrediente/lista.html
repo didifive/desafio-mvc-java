@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div class="alert alert-info d-flex justify-content-between align-items-center mb-3" th:if="${#lists.isEmpty(listaIngredientes)}">
+		<span>Nenhum Ingrediente encontrado!</span>
+		<a class="btn btn-info" th:href="@{/ingrediente/cadastro}">Cadastrar</a>
+	</div>
+	
+	<div class="card">
+		<div class="card-body">
+		  <h5 class="card-title">Filtro para Ingrediente</h5>
+		  <form method="GET">
+			<div class="d-flex justify-content-between align-items-end mb-2">
+				<div class="form-group col-12">
+					<label for="nome">Nome:</label>
+					<div class="input-group">
+						<input 
+							class="form-control"
+							type="text"
+							name="nome"
+							th:value="${nome}"></input>
+						<button
+							type="submit"
+							class="btn btn-primary">
+							<i class="fa-solid fa-magnifying-glass"></i> Pesquisar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		</div>
+	  </div>
+	
+	<div th:if="${not #lists.isEmpty(listaIngredientes)}">
+		<table class="table table-striped align-middle caption-top">
+			<caption>
+				Lista de Ingredientes 
+				<spam th:if="${nome != null and nome != ''}"><i>(Filtrado por nome: <spam th:text="${nome}"></spam>)</i></spam>
+			</caption>
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Nome</th>
+					<th>Imagem</th>
+					<th>Densidade</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="ingrediente : ${listaIngredientes}">
+					<td th:text="${ingrediente.id}"></td>
+					<td th:text="${ingrediente.nome}"></td>
+					<td>
+						<div style="max-width: 100px; max-height: 100px;">
+							<div th:if="${ingrediente.imagem==null}">
+								<img class="img-thumbnail"
+									th:alt="'Ingrediente ' + ${ingrediente.nome}"
+									th:src="@{/assets/images/no-image.png}" >
+							</div>
+							<div th:unless="${ingrediente.imagem==null}">
+								<div th:if="${ingrediente.imagem.startsWith('data:image/png;base64,') 
+												OR ingrediente.imagem.startsWith('http')}">
+									<img class="img-thumbnail"
+										th:alt="'Ingrediente ' + ${ingrediente.nome}"
+										th:src="${ingrediente.imagem}" >
+								</div>
+								<div th:unless="${ingrediente.imagem.startsWith('data:image/png;base64,') 
+												OR ingrediente.imagem.startsWith('http')}">
+									<img class="img-thumbnail"
+										th:alt="'Ingrediente ' + ${ingrediente.nome}"
+										th:src="@{/assets/images/no-image.png}" >
+								</div>
+							</div>
+						</div>
+					</td>
+					<td th:text="${#numbers.formatDecimal(ingrediente.densidade, 1, 'POINT', 4, 'COMMA')} 
+									+ ' g/cm³'"></td>
+					<td class="text-end">
+						<a class="btn btn-primary btn-sm" title="Detalhes" th:href="@{/ingrediente/detalhe(id=${ingrediente.id})}">
+							<i class="fa-solid fa-file-lines"></i> Detalhes
+						</a>
+						<a class="btn btn-primary btn-sm ms-2" th:href="@{/ingrediente/cadastro(id=${ingrediente.id})}">
+							<i class="fa-solid fa-pen-to-square"></i> Editar
+						</a>
+						<button th:if="${not #lists.isEmpty(ingrediente.receitas)}"
+							type="button"
+							class="btn btn-secondary btn-sm ms-2"
+							href="#"
+							data-bs-toggle="popover"
+							data-bs-placement="top"
+							title="Não é possível excluir!"
+							th:data-bs-content="'O ingrediente '
+								+ ${ingrediente.nome} 
+								+ ' está sendo utilizado em alguma receita' 
+								+ ', clique em Detalhes para visualizar as receitas onde está sendo utilizado!'"
+						><i class="fa-solid fa-trash-can"></i> Excluir</button>
+						<a th:if="${#lists.isEmpty(ingrediente.receitas)}"
+							type="button"
+							class="btn btn-secondary btn-sm ms-2"
+							data-bs-toggle="modal"
+							data-bs-target="#modalExcluir"
+							data-modal-object="Ingrediente"
+							th:data-modal-name="${ingrediente.nome}"
+							th:data-modal-link="@{/ingrediente/excluir(id=${ingrediente.id})}"
+						><i class="fa-solid fa-trash-can"></i> Excluir</a>
+					</td>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="5" class="text-end">
+						Total de Ingredientes: <span th:text="${#lists.size(listaIngredientes)}"></span>
+						<spam th:if="${nome != null and nome != ''}"><i>(Filtrado por nome: <spam th:text="${nome}"></spam>)</i></spam>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+	 
+</html>

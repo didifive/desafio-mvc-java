@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="apple-touch-icon" sizes="180x180" th:href="@{/apple-touch-icon.png}">
+	<link rel="icon" type="image/png" sizes="32x32" th:href="@{/favicon-32x32.png}">
+	<link rel="icon" type="image/png" sizes="16x16" th:href="@{/favicon-16x16.png}">
+	<link rel="manifest" th:href="@{/site.webmanifest}">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
+	<title>Awesome Tasty Recipes - O espetáculo do sabor</title>
+</head>
+
+<body style="background-color: #ccd7d8;">
+<div class="row justify-content-center mx-auto my-3" >
+	<div class="card col-6">
+		<img th:src="@{assets/images/logo.png}" class="w-75 align-self-center card-img-top" alt="Logotipo">
+		<div class="card-body">
+			<h5 class="card-title">Bem-vindo ao Awesome Tasty Recipes!</h5>
+			<p>Se você está aqui é porque o sistema ainda não possui dados para operar.</p>
+			<p>
+				Abaixo tem o botão "Instalação" para o sistema carregar dados de unidades de medidas, ingredientes, receitas e os seguintes usuários:
+			</p>
+			<p>- Usuário: admin@email.com - Senha: admin@1234 - Perfil: Administrador</p>
+			<p>- Usuário: usuario@email.com - Senha: usuario@1234 - Perfil: Usuário</p>
+			<form method="post" th:action="@{/instalacao}">
+				<input id="deAcordo" name="deAcordo"
+					class="form-check-input"
+					type="checkbox"></input>
+				<label class="form-check-label mb-1">Ao instalar estou de acordo que li as informações acima e em devolver feedback.</label>
+				<br>
+				<button id="btnInstalar" 
+					type="submit"
+					class="btn btn-dark"
+					style="background-color: #4c482e;"
+					disabled><i class="fa-solid fa-cloud-arrow-up"></i> Instalação</button>
+			</form>
+		</div>
+		</div>
+</div>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+	crossorigin="anonymous"></script>
+<script
+	src="https://kit.fontawesome.com/5eed12a441.js"
+	crossorigin="anonymous"></script>
+<script
+	src="https://code.jquery.com/jquery-3.6.0.min.js"
+	crossorigin="anonymous"></script>
+<script
+	src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"
+	integrity="sha256-hlKLmzaRlE8SCJC1Kw8zoUbU8BxA+8kR3gseuKfMjxA="
+	crossorigin="anonymous"></script>
+<script>
+	let deAcordo = $("#deAcordo");
+	deAcordo.change(function() {
+		if (deAcordo.prop('checked')) {
+			$("#btnInstalar").prop('disabled', false);
+		} else {
+			$("#btnInstalar").prop('disabled', true);
+		}
+	});
+</script>
+</body>
+</html>

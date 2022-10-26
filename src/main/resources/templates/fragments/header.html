@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="header">
+	<nav class="navbar navbar-expand-lg navbar-dark mb-4" style="background-color: #4c482e;">
+		<div class="container-fluid">
+			<a class="navbar-brand align-items-center" th:href="@{/}">
+				<img th:src="@{/assets/images/logo.png}" alt="" width="30" height="24" class="d-inline-block align-text-top">
+				Awesome Tasty Recipes
+			</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+				aria-controls="navbarNavDropdown" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNavDropdown">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link"
+						th:classappend="${#request.requestURI.equals('/') ? 'active':''}"
+						aria-current="page" th:href="@{/}">Home</a></li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle"
+						th:classappend="${#request.requestURI.startsWith('/receita') ? 'active':''}"	
+						href="#"
+							id="navbarDropdownMenuReceitas"
+							role="button"
+							data-bs-toggle="dropdown"
+							aria-expanded="false">
+							Receitas </a>
+						<ul class="dropdown-menu dropdown-menu-dark"
+							aria-labelledby="navbarDropdownMenuReceitas" style="background-color: #4c482e;">
+							<li><a class="dropdown-item" th:href="@{/receita}">Listar e Buscar Receitas</a></li>
+							<div th:if="${ #authorization.expression('hasAuthority(''ROLE_USUARIO'')')}">
+								<li><hr class="dropdown-divider"></li>
+								<li>
+									<a class="dropdown-item" th:href="@{/receita/cadastro}">Cadastrar Nova Receita</a></li>
+							</div>
+						</ul></li>
+					<li class="nav-item dropdown" th:if="${ #authorization.expression('hasAuthority(''ROLE_ADMINISTRADOR'')')}">
+						<a class="nav-link dropdown-toggle"
+						th:classappend="${#request.requestURI.startsWith('/unidade-medida')
+											OR #request.requestURI.startsWith('/ingrediente') 
+											OR #request.requestURI.startsWith('/usuario') 
+											? 'active':''}"
+						href="#"
+						id="navbarDropdownMenuAdministracao"
+						role="button"
+						data-bs-toggle="dropdown"
+						data-bs-auto-close="outside"
+						aria-expanded="false"> Cadastros</a>
+						<ul class="dropdown-menu dropdown-menu-dark"
+							aria-labelledby="navbarDropdownMenuAdministracao" style="background-color: #4c482e;">
+							<li class="nav-item dropend">
+								<a class="nav-link dropdown-toggle" href="#"
+									id="navbarDropendMenuAdministracaoUnidadeMedida"
+									role="button"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"> Unidades de Medida
+								</a>
+								<ul class="dropdown-menu"
+									aria-labelledby="navbarDropendMenuAdministracaoUnidadeMedida"
+									style="background-color: #4c482e;">
+									<li><h5 class="dropdown-header">Unidades de Medida</h5></li>
+									<li><a class="dropdown-item" th:href="@{/unidade-medida/cadastro}">Cadastrar</a></li>
+									<li><a class="dropdown-item" th:href="@{/unidade-medida}">Listar</a></li>
+								</ul>
+							</li>
+							<li class="nav-item dropend">
+								<a class="nav-link dropdown-toggle" href="#"
+									id="navbarDropendMenuAdministracaoIngrediente"
+									role="button"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"> Ingredientes
+								</a>
+								<ul class="dropdown-menu"
+									aria-labelledby="navbarDropendMenuAdministracaoIngrediente"
+									style="background-color: #4c482e;">
+									<li><h5 class="dropdown-header">Ingredientes</h5></li>
+									<li><a class="dropdown-item" th:href="@{/ingrediente/cadastro}">Cadastrar</a></li>
+									<li><a class="dropdown-item" th:href="@{/ingrediente}">Listar</a></li>
+								</ul>
+							</li>
+							<li><hr class="dropdown-divider"></li>
+							<li class="nav-item dropend">
+								<a class="nav-link dropdown-toggle" href="#"
+									id="navbarDropendMenuAdministracaoUsuario"
+									role="button"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"> Usuários
+								</a>
+								<ul class="dropdown-menu"
+									aria-labelledby="navbarDropendMenuAdministracaoUsuario"
+									style="background-color: #4c482e;">
+									<li><h5 class="dropdown-header">Usuários</h5></li>
+									<li><a class="dropdown-item" th:href="@{/usuario/cadastro}">Cadastrar</a></li>
+									<li><a class="dropdown-item" th:href="@{/usuario}">Listar</a></li>
+								</ul>
+							</li>
+						</ul></li>
+					<li class="nav-item"><a class="nav-link"
+						th:classappend="${#request.requestURI.endsWith('/conversor') ? 'active':''}"
+						aria-current="page" th:href="@{/conversor}">Conversor</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:classappend="${#request.requestURI.endsWith('/sobre') ? 'active':''}"
+						aria-current="page" th:href="@{/sobre}">Sobre</a></li>
+				</ul>
+				<ul class="navbar-nav" th:if="${not #authorization.expression('isAuthenticated()')}">
+					<li class="nav-item">
+						<a class="nav-link" aria-current="page" th:href="@{/login}">Login</a></li>
+					<li class="nav-item">
+						<a class="nav-link"	aria-current="page" th:href="@{/cadastrar-usuario}">Cadastrar Usuário</a></li>
+				</ul>
+				<ul class="navbar-nav" th:if="${#authorization.expression('isAuthenticated()')}">
+					<li class="nav-item">
+						<span class="nav-link active" aria-current="page" href="#">
+							Bem-vindo <span th:text="${#authentication.name}"></span></a></li>
+					<li class="nav-item">
+						<a class="nav-link" aria-current="page" th:href="@{/logout}">Sair</a></li>
+
+				</ul>
+
+			</div>
+		</div>
+	</nav>
+</div>
+</body>
+</html>

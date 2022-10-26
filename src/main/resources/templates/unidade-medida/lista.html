@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}"
+	 lang="pt-BR">
+
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+	<div class="alert alert-info d-flex justify-content-between align-items-center mb-3" th:if="${#lists.isEmpty(listaUnidadesMedida)}">
+		<span>Nenhuma Unidade de Medida encontrada!</span>
+		<a class="btn btn-info" th:href="@{/unidade-medida/cadastro}">Cadastrar</a>
+	</div>
+	
+	<div class="card">
+		<div class="card-body">
+		  <h5 class="card-title">Filtro para Unidade de Medida</h5>
+		  <form method="GET">
+			<div class="d-flex justify-content-between align-items-end mb-2">
+				<div class="form-group col-12">
+					<label for="nome">Nome:</label>
+					<div class="input-group">
+						<input 
+							class="form-control"
+							type="text"
+							name="nome"
+							th:value="${nome}"></input>
+						<button
+							type="submit"
+							class="btn btn-primary">
+							<i class="fa-solid fa-magnifying-glass"></i> Pesquisar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		</div>
+	  </div>
+	
+	<div th:if="${not #lists.isEmpty(listaUnidadesMedida)}">
+		<table class="table table-striped caption-top">
+			<caption>
+				Lista de Unidades de Medida 
+				<spam th:if="${nome != null and nome != ''}"><i>(Filtrado por nome: <spam th:text="${nome}"></spam>)</i></spam>
+			</caption>
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Nome</th>
+					<th>Abreviação</th>
+					<th>Unidade de Referência</th>
+					<th class="text-end"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="unidadeMedida : ${listaUnidadesMedida}">
+					<td th:text="${unidadeMedida.id}"></td>
+					<td th:text="${unidadeMedida.nome}"></td>
+					<td th:text="${unidadeMedida.abreviacao}"></td>
+					<td th:text="${#numbers.formatDecimal(unidadeMedida.quantidadeUnidadeReferencia, 1, 'POINT', 4, 'COMMA')} 
+									+ ' ' + ${unidadeMedida.unidadeReferencia.abreviacao}
+									+ ' (' + ${unidadeMedida.unidadeReferencia.nome} + ')'"></td>
+					<td class="text-end">
+						<a class="btn btn-primary btn-sm" title="Detalhes" th:href="@{/unidade-medida/detalhe(id=${unidadeMedida.id})}">
+							<i class="fa-solid fa-file-lines"></i> Detalhes
+						</a>
+						<a class="btn btn-primary btn-sm ms-2" th:href="@{/unidade-medida/cadastro(id=${unidadeMedida.id})}">
+							<i class="fa-solid fa-pen-to-square"></i> Editar
+						</a>
+						<button th:if="${not #lists.isEmpty(unidadeMedida.ingredientes)}"
+							type="button"
+							class="btn btn-secondary btn-sm ms-2"
+							href="#"
+							data-bs-toggle="popover"
+							data-bs-placement="top"
+							title="Não é possível excluir!"
+							th:data-bs-content="'A unidade de medida '
+								+ ${unidadeMedida.nome} 
+								+ ' está sendo utilizada com algum ingrediente em alguma receita' 
+								+ ', clique em Detalhes para visualizar as receitas onde está sendo utilizada!'"
+						><i class="fa-solid fa-trash-can"></i> Excluir</button>
+						<a th:if="${#lists.isEmpty(unidadeMedida.ingredientes)}"
+							type="button"
+							class="btn btn-secondary btn-sm ms-2"
+							data-bs-toggle="modal"
+							data-bs-target="#modalExcluir"
+							data-modal-object="Unidade de Medida"
+							th:data-modal-name="${unidadeMedida.nome}"
+							th:data-modal-link="@{/unidade-medida/excluir(id=${unidadeMedida.id})}"
+						><i class="fa-solid fa-trash-can"></i> Excluir</a>
+					</td>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="5" class="text-end">
+						Total de Unidades de Medidas: <span th:text="${#lists.size(listaUnidadesMedida)}"></span>
+						<spam th:if="${nome != null and nome != ''}"><i>(Filtrado por nome: <spam th:text="${nome}"></spam>)</i></spam>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+	 
+</html>
