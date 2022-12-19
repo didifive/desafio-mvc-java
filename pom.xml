@@ -93,6 +93,7 @@
 	</dependencies>
 
 	<build>
+		<defaultGoal>build</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
