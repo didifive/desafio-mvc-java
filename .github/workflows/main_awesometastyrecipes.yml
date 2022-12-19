@@ -22,7 +22,7 @@ jobs:
           java-version: '17'
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn -DDB_HOST=${{DB_HOST}} -DDB_USER=${{DB_USER}} -DDB_PASS=${{DB_PASS}} -DEMAIL_SERVER=${{EMAIL_SERVER}} -DEMAIL_SERVER_PORT=${{EMAIL_SERVER_PORT}} -DEMAIL_USER=${{EMAIL_USER}} -DEMAIL_PASS=${{EMAIL_PASS}} clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
