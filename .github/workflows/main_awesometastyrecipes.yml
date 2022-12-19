@@ -22,7 +22,7 @@ jobs:
           java-version: '17'
 
       - name: Build with Maven
-        run: mvnw -DDB_HOST=${{ secrets.DB_HOST }} -DDB_USER=${{ secrets.DB_USER }} -DDB_PASS=${{ secrets.DB_PASS }} -DEMAIL_SERVER=${{ secrets.EMAIL_SERVER }} -DEMAIL_SERVER_PORT=${{ secrets.EMAIL_SERVER_PORT }} -DEMAIL_USER=${{ secrets.EMAIL_USER }} -DEMAIL_PASS=${{ secrets.EMAIL_PASS }} clean install
+        run: ./mvnw -DDB_HOST=${{ secrets.DB_HOST }} -DDB_USER=${{ secrets.DB_USER }} -DDB_PASS=${{ secrets.DB_PASS }} -DEMAIL_SERVER=${{ secrets.EMAIL_SERVER }} -DEMAIL_SERVER_PORT=${{ secrets.EMAIL_SERVER_PORT }} -DEMAIL_USER=${{ secrets.EMAIL_USER }} -DEMAIL_PASS=${{ secrets.EMAIL_PASS }} clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
