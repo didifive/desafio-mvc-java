@@ -106,11 +106,11 @@ public class ModelAndViewFileObject {
 	 * MODELANDVIEW FILES
 	 */
 	//PRINCIPAL
-	public static final String INDEX = "/index.html";
-	public static final String INSTALACAO = "/instalacao.html";
-	public static final String SOBRE = "/sobre.html";
-	public static final String CADASTRO_USUARIO = "/cadastro_usuario.html";
-	public static final String CONVERSOR = "/conversor.html";
+	public static final String INDEX = "index.html";
+	public static final String INSTALACAO = "instalacao.html";
+	public static final String SOBRE = "sobre.html";
+	public static final String CADASTRO_USUARIO = "cadastro_usuario.html";
+	public static final String CONVERSOR = "conversor.html";
 	
 	//ARQUIVOS PADRÕES
 	public static final String FORM = "/form.html";
@@ -118,7 +118,7 @@ public class ModelAndViewFileObject {
 	public static final String DETALHE = "/detalhe.html";
 	
 	//ARQUIVOS LOGIN
-	public static final String LOGIN = "/login.html";
+	public static final String LOGIN = "login.html";
 	public static final String ACESSO_NEGADO = "/auth_acesso_negado.html";
 	
 	//PASTAS
